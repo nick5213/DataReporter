@@ -61,12 +61,15 @@ static void *TestFlutter(const std::string &uuid, const std::string &path, const
       auto l = v.length;
       auto s = v.values;
 
+      dc::DCReport *token;
       int64_t key;
       std::vector<std::string> data;
 
       for (int i = 0; i < l; ++i) {
         auto item = s[i];
-        if (item->type == Dart_CObject_kInt64) {
+        if (i == 0 && item->type == Dart_CObject_kInt64) {
+          token = reinterpret_cast<dc::DCReport *>(item->value.as_int64);
+        } else if (i == 1 && item->type == Dart_CObject_kInt64) {
           key = item->value.as_int64;
         } else if (item->type == Dart_CObject_kString) {
           data.emplace_back(item->value.as_string);
@@ -75,11 +78,16 @@ static void *TestFlutter(const std::string &uuid, const std::string &path, const
       }
 
       // upload data
+      if (token) {
+        token->UploadSuccess(key);
+        std::cout << ">>> DartPostCObject upload success with: " << key << std::endl;
+      }
     }
   });
 
   DCReportSetCallback(reporter, 8199);
   DCReportSetItemCount(reporter, 2);
+  DCReportSetReportInterval(reporter, 1 * 1000L);
 
   DCReportPush(reporter, "Hello Flutter");
   DCReportPush(reporter, "Dart-FFi");
