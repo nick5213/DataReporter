@@ -2,6 +2,9 @@ package com.iget.datareporter;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class DataReporter {
 
     private static ISoload mSoloadImp;
@@ -136,6 +139,7 @@ public class DataReporter {
         mNativeReporter = 0;
     }
 
+    @Keep
     private static void upload(long key, byte[][] data, IReport report) {
         if (report != null) {
             report.upload(key, data);
