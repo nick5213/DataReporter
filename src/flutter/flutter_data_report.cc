@@ -35,10 +35,10 @@ void DCReportSetCallback(DCReportToken token, int64_t port) {
   auto *dc_report = reinterpret_cast<dc::DCReport *>(token);
   if (dc_report) {
     // set report callback
-    dc_report->SetReportCallback([port](int64_t key, std::vector<std::string> &data) {
-      // convert
+    dc_report->SetReportCallback([token, port](int64_t key, std::vector<std::string> &data) {
+      // convert [token, port, std::string ...]
       dc::ffi::ScopeDartObjectArray objs;
-      objs.Push<int64_t>(key);
+      objs.Push<int64_t, int64_t>(reinterpret_cast<int64_t>(token), key);
       for (const auto &v: data) {
         objs.Push<std::string>(v);
       }

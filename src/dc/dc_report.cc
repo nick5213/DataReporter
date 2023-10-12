@@ -26,6 +26,7 @@ std::shared_ptr<future::Reporter> DCReport::GetReporter() {
 
 void DCReport::Upload(int64_t key, std::list<std::shared_ptr<future::CacheItem>> &data) {
   if (callback_ == nullptr) {
+    reporter_->UploadFailed(key);
     return;
   }
   std::vector<std::string> data_info;
