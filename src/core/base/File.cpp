@@ -12,6 +12,7 @@
 
 namespace future {
 
+#ifdef DC_REPORT_DEBUG
     bool File::MkPath(const std::string &path) {
       return true;
     }
@@ -49,6 +50,7 @@ namespace future {
       closedir(dir);
       return retList;
     }
+#endif
 
     bool File::ZeroFillFile(int fd, size_t startPos, size_t size) {
         if (fd < 0) {

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+properties.load(project.file('version.properties').newDataInputStream())
 def version_code = properties.getProperty('version.Code')
 def version_name = properties.getProperty('version.Name')
 ext {
@@ -112,7 +112,7 @@ android {
         }
     }
 
-    ndkPath "D:\\android_dev\\android-ndk-r24"
+//    ndkPath "D:\\android_dev\\android-ndk-r24"
 
     externalNativeBuild {
         cmake {
