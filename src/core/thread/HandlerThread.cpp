@@ -7,12 +7,6 @@
 #include "HandlerThread.h"
 #include "Platform.h"
 
-#if PLATFORM(ANDROID)
-
-#include "AndroidUtil.h"
-
-#endif
-
 namespace WTF {
 
     HandlerThread::HandlerThread() : m_IsStop(true) {
@@ -51,9 +45,6 @@ namespace WTF {
     }
 
     void HandlerThread::run() {
-#if PLATFORM(ANDROID)
-        AndroidUtil::attachCurrentThread();
-#endif
         while (!m_IsStop) {
             TimeTask task;
             {
@@ -91,9 +82,6 @@ namespace WTF {
 
         }
 
-#if PLATFORM(ANDROID)
-        AndroidUtil::detachCurrentThread();
-#endif
         delete this;
     }
 
