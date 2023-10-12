@@ -20,3 +20,5 @@ sample/Android/app/build
 sample/Android/build
 *.DS_Store
 
+.idea
+cmake-build-debug
