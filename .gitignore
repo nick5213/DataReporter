@@ -22,3 +22,5 @@ sample/Android/build
 
 .idea
 cmake-build-debug
+.vscode
+build/

@@ -3,6 +3,8 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
+project(dc_report)
+
 cmake_minimum_required(VERSION 3.4.1)
 
 # Creates and names a library, sets it as either STATIC
@@ -16,6 +18,8 @@ cmake_minimum_required(VERSION 3.4.1)
 #option(MEMORY_CHECK         "Set to switch to build use SSE"  ON)
 #add_definitions(-D MEMORY_CHECK)
 #endif()
+
+add_compile_options(-v)
 
 get_filename_component(CMAKE_SOURCE_DIR
         "../../../src"
@@ -75,9 +79,51 @@ extract_dirs(${CMAKE_SOURCE_DIR} data_reporter_header_files)
 extract_android_include(data_reporter_header_files data_reporter_android_header_files)
 include_directories(${data_reporter_android_header_files})
 
+#file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/*.cpp ${CMAKE_SOURCE_DIR}/*.c ${CMAKE_SOURCE_DIR}/*.cc)
+#extract_android_source(SOURCES SOURCE_FILES)
 
-file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/*.cpp ${CMAKE_SOURCE_DIR}/*.c ${CMAKE_SOURCE_DIR}/*.cc)
-extract_android_source(SOURCES SOURCE_FILES)
+if (ANDROID)
+  set(ANDROID_SOURCE
+    ${CMAKE_SOURCE_DIR}/call_interface/android/DataReporter.cpp
+    ${CMAKE_SOURCE_DIR}/call_interface/android/JniOnLoad.cpp
+    ${CMAKE_SOURCE_DIR}/platform/android/FileAndroid.cpp
+    ${CMAKE_SOURCE_DIR}/platform/android/util/AndroidUtil.cpp
+    ${CMAKE_SOURCE_DIR}/platform/android/util/JniEnvelope.cpp
+    ${CMAKE_SOURCE_DIR}/platform/android/util/JniHelper.cpp
+  )
+endif ()
+
+
+set(DATA_SOURCE
+  ${CMAKE_SOURCE_DIR}/core/base/Buffer.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/File.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/MiniPBCoder.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/MmapedFile.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/PBUtility.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/RawInput.cpp
+  ${CMAKE_SOURCE_DIR}/core/base/RawOutput.cpp
+  ${CMAKE_SOURCE_DIR}/core/crypto/xxtea.c
+  ${CMAKE_SOURCE_DIR}/core/reporter/DataProvider.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/FileInputStream.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/IoUtil.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/MemoryStream.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/Reporter.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/StringUtil.cpp
+  ${CMAKE_SOURCE_DIR}/core/reporter/TimeUtil.cpp
+  ${CMAKE_SOURCE_DIR}/core/thread/HandlerThread.cpp
+)
+
+set(FLUTTER_SOURCE
+  ${CMAKE_SOURCE_DIR}/dc/dc_report.cc
+  ${CMAKE_SOURCE_DIR}/dart/xdart_channel.cc
+  ${CMAKE_SOURCE_DIR}/flutter/flutter_data_report.cc
+)
+
+set(SOURCE_FILES
+  ${DATA_SOURCE}
+  ${FLUTTER_SOURCE}
+  ${ANDROID_SOURCE}
+)
 
 add_definitions(-DHAVE_EXPAT_CONFIG_H )
 
