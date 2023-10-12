@@ -22,6 +22,8 @@ namespace future {
                  std::function<void(int64_t key,
                                     std::list<std::shared_ptr<CacheItem> > &data)> netImpl);
 
+        ~Reporter();
+
         static void Destroy(Reporter *reporter);
 
         static void *GetValidMem(Buffer &buffer);
@@ -51,8 +53,6 @@ namespace future {
         void ReaWaken();
 
     private:
-
-        ~Reporter();
 
         void CheckDataBuf();
 

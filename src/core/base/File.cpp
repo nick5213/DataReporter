@@ -5,11 +5,50 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <dirent.h>
 #include <StringUtil.h>
 #include "File.h"
 #include "Log.h"
 
 namespace future {
+
+    bool File::MkPath(const std::string &path) {
+      return true;
+    }
+
+    bool File::IsFileExist(const std::string &path) {
+      return true;
+    }
+
+    bool File::ReName(const std::string &oldPath, const std::string &newPath) {
+      return true;
+    }
+
+    bool File::RemoveFile(const std::string &path) {
+      return true;
+    }
+
+    std::shared_ptr<std::list<std::string> > File::FileList(const std::string &path) {
+      std::shared_ptr<std::list<std::string> > retList = std::make_shared<std::list<std::string> >();
+      DIR *dir = opendir(path.c_str());
+      if (nullptr == dir) {
+        return retList;
+      }
+
+      std::string pathTmp;
+      struct dirent *file;
+      while ((file = readdir(dir)) != nullptr) {
+        if (strcmp(file->d_name, ".") == 0 || strcmp(file->d_name, "..") == 0) {
+          continue;
+        }
+        pathTmp.clear();
+        pathTmp.append(file->d_name);
+        retList->push_back(pathTmp);
+      }
+
+      closedir(dir);
+      return retList;
+    }
 
     bool File::ZeroFillFile(int fd, size_t startPos, size_t size) {
         if (fd < 0) {
